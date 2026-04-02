@@ -115,26 +115,26 @@ This implementation plan covers the development of a distributed microservices-b
     - Test expired token handling, invalid token format
     - Test edge cases for token refresh and blacklisting
 
-- [ ] 3. Implement Theatre Service
-  - [ ] 3.1 Set up Theatre Service project structure and dependencies
+- [x] 3. Implement Theatre Service
+  - [x] 3.1 Set up Theatre Service project structure and dependencies
     - Configure Spring Boot with Spring Data JPA, Redis for caching
     - Set up PostgreSQL connection and Flyway migrations
     - Add RestTemplate/WebClient for inter-service communication
     - _Requirements: FR-TH-01 to FR-TH-06_
 
-  - [ ] 3.2 Create database schemas for Theatre Service
+  - [x] 3.2 Create database schemas for Theatre Service
     - Create Flyway migrations for theatres, screens, shows, seats tables
     - Add indexes: idx_theatres_city, idx_theatres_partner, idx_shows_movie, idx_seats_show
     - Implement foreign key constraints and cascading deletes
     - _Requirements: FR-TH-01 to FR-TH-04_
 
-  - [ ] 3.3 Create JPA entities and repositories
+  - [x] 3.3 Create JPA entities and repositories
     - Implement Theatre, Screen, Show, Seat entities with relationships
     - Create repositories: TheatreRepository, ScreenRepository, ShowRepository, SeatRepository
     - Add custom query methods for search operations
     - _Requirements: FR-TH-01 to FR-TH-04_
 
-  - [ ] 3.4 Implement theatre registration and onboarding
+  - [x] 3.4 Implement theatre registration and onboarding
     - Create POST /api/theatres endpoint with TheatreRequest DTO
     - Implement TheatreService to create theatre with PENDING_APPROVAL status
     - Create screens and initial seat layout in same transaction
@@ -145,7 +145,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 6: Theatre creation is retrievable**
     - **Validates: Requirements FR-TH-01**
 
-  - [ ] 3.6 Implement screen management endpoints
+  - [x] 3.6 Implement screen management endpoints
     - Create POST /api/theatres/{theatreId}/screens for adding screens
     - Create PUT /api/theatres/{theatreId}/screens/{screenId} for updates
     - Create DELETE /api/theatres/{theatreId}/screens/{screenId} for deletion
@@ -156,7 +156,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 7: Screen operations maintain count invariant**
     - **Validates: Requirements FR-TH-02**
 
-  - [ ] 3.8 Implement show management endpoints
+  - [x] 3.8 Implement show management endpoints
     - Create POST /api/theatres/{theatreId}/shows for creating shows
     - Create PUT /api/theatres/shows/{showId} for updates
     - Create DELETE /api/theatres/shows/{showId} for deletion
@@ -167,7 +167,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 8: Show CRUD maintains data integrity**
     - **Validates: Requirements FR-TH-03**
 
-  - [ ] 3.10 Implement seat inventory allocation
+  - [x] 3.10 Implement seat inventory allocation
     - Create seat records for each show based on screen layout
     - Implement POST endpoint to initialize seats with AVAILABLE/BLOCKED status
     - Ensure each seat number appears exactly once per show
@@ -177,7 +177,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 9: Seat allocation creates correct inventory**
     - **Validates: Requirements FR-TH-04**
 
-  - [ ] 3.12 Implement bulk seat status update
+  - [x] 3.12 Implement bulk seat status update
     - Create PUT /api/theatres/shows/{showId}/seats endpoint
     - Accept array of seat updates with seat number and status
     - Execute updates in single transaction (atomic operation)
@@ -187,7 +187,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 10: Bulk seat update is atomic**
     - **Validates: Requirements FR-TH-05**
 
-  - [ ] 3.14 Implement theatre approval workflow
+  - [x] 3.14 Implement theatre approval workflow
     - Create PUT /api/theatres/{theatreId}/approve endpoint (SUPER_ADMIN only)
     - Transition status from PENDING_APPROVAL to APPROVED or REJECTED
     - Validate current status before allowing transition
@@ -197,7 +197,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 11: Theatre approval transitions status correctly**
     - **Validates: Requirements FR-TH-06**
 
-  - [ ] 3.16 Implement theatre and show search endpoints
+  - [x] 3.16 Implement theatre and show search endpoints
     - Create GET /api/theatres/search with filters: city, movieName, date, language, genre
     - Return theatres with matching shows and available seat counts
     - Implement caching with Redis (60-second TTL)
@@ -220,27 +220,27 @@ This implementation plan covers the development of a distributed microservices-b
   - Ask the user if questions arise
 
 
-- [ ] 5. Implement Booking Service core functionality
-  - [ ] 5.1 Set up Booking Service project structure and dependencies
+- [-] 5. Implement Booking Service core functionality
+  - [x] 5.1 Set up Booking Service project structure and dependencies
     - Configure Spring Boot with Spring Data JPA, Redis (Redisson), Kafka
     - Add Redisson dependency (3.24.3) for distributed locking
     - Set up PostgreSQL connection and Flyway migrations
     - Configure Kafka producer for booking events
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.2 Create database schemas for Booking Service
+  - [x] 5.2 Create database schemas for Booking Service
     - Create Flyway migrations for bookings and booking_seats tables
     - Add indexes: idx_bookings_user, idx_bookings_show, idx_bookings_status
     - Implement foreign key constraints
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.3 Create JPA entities and repositories
+  - [x] 5.3 Create JPA entities and repositories
     - Implement Booking and BookingSeat entities with relationships
     - Create BookingRepository with custom query methods
     - Add methods for finding by userId, showId, and status
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.4 Implement seat availability query endpoint
+  - [~] 5.4 Implement seat availability query endpoint
     - Create GET /api/bookings/show/{showId}/seats endpoint
     - Query seat status from Theatre Service
     - Check Redis for held seats (not yet expired)
@@ -251,7 +251,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 13: Available seats query returns only bookable seats**
     - **Validates: Requirements FR-BK-02**
 
-  - [ ] 5.6 Implement seat hold with distributed locking
+  - [-] 5.6 Implement seat hold with distributed locking
     - Create POST /api/bookings/hold endpoint
     - Validate seat count <= 10 seats
     - Use Redisson distributed locks with 10-minute TTL
@@ -271,7 +271,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 16: No double booking of seats**
     - **Validates: Requirements FR-BK-03, NFR-Consistency**
 
-  - [ ] 5.10 Implement offer engine with Strategy pattern
+  - [x] 5.10 Implement offer engine with Strategy pattern
     - Create OfferStrategy interface with apply(BookingContext) method
     - Implement ThirdTicketDiscountStrategy (50% off 3rd ticket)
     - Implement AfternoonShowDiscountStrategy (20% off for 12:00-17:00 shows)
@@ -290,7 +290,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 23: Offer mutual exclusivity**
     - **Validates: Requirements FR-BK-08**
 
-  - [ ] 5.14 Implement booking confirmation endpoint
+  - [~] 5.14 Implement booking confirmation endpoint
     - Create POST /api/bookings/confirm endpoint
     - Validate holdId exists and not expired
     - Calculate offers using OfferEngine
@@ -302,7 +302,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 17: Payment success confirms booking**
     - **Validates: Requirements FR-BK-04, FR-PAY-03**
 
-  - [ ] 5.16 Implement Kafka consumer for payment events
+  - [~] 5.16 Implement Kafka consumer for payment events
     - Create @KafkaListener for payment.success topic
     - Update booking status to CONFIRMED
     - Release seat locks from Redis
@@ -313,7 +313,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 24: Booking confirmation publishes notification event**
     - **Validates: Requirements FR-BK-09**
 
-  - [ ] 5.18 Implement booking cancellation endpoint
+  - [~] 5.18 Implement booking cancellation endpoint
     - Create DELETE /api/bookings/{bookingId} endpoint
     - Validate booking exists and status is CONFIRMED
     - Update booking status to CANCELLED
@@ -325,7 +325,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 18: Cancellation transitions status and initiates refund**
     - **Validates: Requirements FR-BK-05, FR-PAY-05**
 
-  - [ ] 5.20 Implement bulk booking endpoint
+  - [~] 5.20 Implement bulk booking endpoint
     - Create POST /api/bookings/bulk endpoint
     - Accept multiple seat selections in single request
     - Execute all seat locks and booking creation in single transaction
@@ -336,7 +336,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 19: Bulk booking is atomic**
     - **Validates: Requirements FR-BK-06**
 
-  - [ ] 5.22 Implement bulk cancellation endpoint
+  - [~] 5.22 Implement bulk cancellation endpoint
     - Create DELETE /api/bookings/bulk endpoint
     - Accept array of booking IDs
     - Cancel all bookings in single transaction
@@ -347,7 +347,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 20: Bulk cancellation is atomic**
     - **Validates: Requirements FR-BK-07**
 
-  - [ ] 5.24 Implement user bookings query endpoint
+  - [~] 5.24 Implement user bookings query endpoint
     - Create GET /api/bookings/user/{userId} endpoint
     - Return all bookings with show details, seats, amounts, status
     - Add pagination support (page size: 20)
