@@ -220,27 +220,27 @@ This implementation plan covers the development of a distributed microservices-b
   - Ask the user if questions arise
 
 
-- [ ] 5. Implement Booking Service core functionality
-  - [ ] 5.1 Set up Booking Service project structure and dependencies
+- [-] 5. Implement Booking Service core functionality
+  - [x] 5.1 Set up Booking Service project structure and dependencies
     - Configure Spring Boot with Spring Data JPA, Redis (Redisson), Kafka
     - Add Redisson dependency (3.24.3) for distributed locking
     - Set up PostgreSQL connection and Flyway migrations
     - Configure Kafka producer for booking events
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.2 Create database schemas for Booking Service
+  - [x] 5.2 Create database schemas for Booking Service
     - Create Flyway migrations for bookings and booking_seats tables
     - Add indexes: idx_bookings_user, idx_bookings_show, idx_bookings_status
     - Implement foreign key constraints
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.3 Create JPA entities and repositories
+  - [x] 5.3 Create JPA entities and repositories
     - Implement Booking and BookingSeat entities with relationships
     - Create BookingRepository with custom query methods
     - Add methods for finding by userId, showId, and status
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [ ] 5.4 Implement seat availability query endpoint
+  - [~] 5.4 Implement seat availability query endpoint
     - Create GET /api/bookings/show/{showId}/seats endpoint
     - Query seat status from Theatre Service
     - Check Redis for held seats (not yet expired)
@@ -251,7 +251,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 13: Available seats query returns only bookable seats**
     - **Validates: Requirements FR-BK-02**
 
-  - [ ] 5.6 Implement seat hold with distributed locking
+  - [-] 5.6 Implement seat hold with distributed locking
     - Create POST /api/bookings/hold endpoint
     - Validate seat count <= 10 seats
     - Use Redisson distributed locks with 10-minute TTL
@@ -271,7 +271,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 16: No double booking of seats**
     - **Validates: Requirements FR-BK-03, NFR-Consistency**
 
-  - [ ] 5.10 Implement offer engine with Strategy pattern
+  - [x] 5.10 Implement offer engine with Strategy pattern
     - Create OfferStrategy interface with apply(BookingContext) method
     - Implement ThirdTicketDiscountStrategy (50% off 3rd ticket)
     - Implement AfternoonShowDiscountStrategy (20% off for 12:00-17:00 shows)
@@ -290,7 +290,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 23: Offer mutual exclusivity**
     - **Validates: Requirements FR-BK-08**
 
-  - [ ] 5.14 Implement booking confirmation endpoint
+  - [~] 5.14 Implement booking confirmation endpoint
     - Create POST /api/bookings/confirm endpoint
     - Validate holdId exists and not expired
     - Calculate offers using OfferEngine
@@ -302,7 +302,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 17: Payment success confirms booking**
     - **Validates: Requirements FR-BK-04, FR-PAY-03**
 
-  - [ ] 5.16 Implement Kafka consumer for payment events
+  - [~] 5.16 Implement Kafka consumer for payment events
     - Create @KafkaListener for payment.success topic
     - Update booking status to CONFIRMED
     - Release seat locks from Redis
@@ -313,7 +313,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 24: Booking confirmation publishes notification event**
     - **Validates: Requirements FR-BK-09**
 
-  - [ ] 5.18 Implement booking cancellation endpoint
+  - [~] 5.18 Implement booking cancellation endpoint
     - Create DELETE /api/bookings/{bookingId} endpoint
     - Validate booking exists and status is CONFIRMED
     - Update booking status to CANCELLED
@@ -325,7 +325,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 18: Cancellation transitions status and initiates refund**
     - **Validates: Requirements FR-BK-05, FR-PAY-05**
 
-  - [ ] 5.20 Implement bulk booking endpoint
+  - [~] 5.20 Implement bulk booking endpoint
     - Create POST /api/bookings/bulk endpoint
     - Accept multiple seat selections in single request
     - Execute all seat locks and booking creation in single transaction
@@ -336,7 +336,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 19: Bulk booking is atomic**
     - **Validates: Requirements FR-BK-06**
 
-  - [ ] 5.22 Implement bulk cancellation endpoint
+  - [~] 5.22 Implement bulk cancellation endpoint
     - Create DELETE /api/bookings/bulk endpoint
     - Accept array of booking IDs
     - Cancel all bookings in single transaction
@@ -347,7 +347,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 20: Bulk cancellation is atomic**
     - **Validates: Requirements FR-BK-07**
 
-  - [ ] 5.24 Implement user bookings query endpoint
+  - [~] 5.24 Implement user bookings query endpoint
     - Create GET /api/bookings/user/{userId} endpoint
     - Return all bookings with show details, seats, amounts, status
     - Add pagination support (page size: 20)

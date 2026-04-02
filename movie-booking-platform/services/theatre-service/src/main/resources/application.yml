@@ -4,16 +4,25 @@ server:
 spring:
   application:
     name: theatre-service
+<<<<<<< HEAD
   
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:moviebooking}
     username: ${DB_USER:moviebooking}
     password: ${DB_PASSWORD:moviebooking123}
+=======
+
+  datasource:
+    url: jdbc:postgresql://${THEATRE_DB_HOST:localhost}:5432/theatre_db
+    username: "moviebooking"
+    password: "moviebooking123"
+>>>>>>> 16d3a52d46b9eb2277ae6262281c7834763fdfe3
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
       connection-timeout: 30000
+<<<<<<< HEAD
       idle-timeout: 600000
       max-lifetime: 1800000
   
@@ -21,10 +30,17 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+=======
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+>>>>>>> 16d3a52d46b9eb2277ae6262281c7834763fdfe3
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+<<<<<<< HEAD
         jdbc:
           batch_size: 20
         order_inserts: true
@@ -60,3 +76,34 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+=======
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+      timeout: 2000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+
+auth:
+  service:
+    url: ${AUTH_SERVICE_URL:http://localhost:8086}
+
+logging:
+  level:
+    com.xyz.theatre: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss} %-5level [%logger{20}] - %msg%n"
+>>>>>>> 16d3a52d46b9eb2277ae6262281c7834763fdfe3

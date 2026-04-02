@@ -5,13 +5,18 @@ import com.xyz.theatre.entity.TheatreStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+<<<<<<< HEAD
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+=======
+
+>>>>>>> 16d3a52d46b9eb2277ae6262281c7834763fdfe3
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+<<<<<<< HEAD
 @Repository
 public interface TheatreRepository extends JpaRepository<Theatre, UUID> {
     
@@ -51,5 +56,26 @@ public interface TheatreRepository extends JpaRepository<Theatre, UUID> {
         @Param("date") LocalDate date,
         @Param("language") String language,
         @Param("genre") String genre
+=======
+public interface TheatreRepository extends JpaRepository<Theatre, UUID> {
+
+    List<Theatre> findByPartnerId(UUID partnerId);
+
+    List<Theatre> findByCityIgnoreCase(String city);
+
+    Optional<Theatre> findByTheatreIdAndPartnerId(UUID theatreId, UUID partnerId);
+
+    @Query("""
+        SELECT DISTINCT t FROM Theatre t
+        JOIN t.screens s
+        JOIN s.shows sh
+        WHERE (:city IS NULL OR LOWER(t.city) = LOWER(:city))
+          AND (:movieName IS NULL OR LOWER(sh.movieName) LIKE LOWER(CONCAT('%', :movieName, '%')))
+          AND t.status = 'APPROVED'
+        """)
+    List<Theatre> searchTheatres(
+        @Param("city") String city,
+        @Param("movieName") String movieName
+>>>>>>> 16d3a52d46b9eb2277ae6262281c7834763fdfe3
     );
 }

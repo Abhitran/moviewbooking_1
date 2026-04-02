@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8086
 
 spring:
   application:
@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://${AUTH_DB_HOST:localhost}:5432/auth_db
-    username: ${AUTH_DB_USER:postgres}
-    password: ${AUTH_DB_PASSWORD:postgres}
+    username: "moviebooking"
+    password: "moviebooking123"
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -33,7 +33,6 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: 6379
-      password: ${REDIS_PASSWORD:}
       timeout: 2000ms
 
 jwt:
@@ -46,7 +45,9 @@ jwt:
 logging:
   level:
     com.xyz.auth: DEBUG
-    org.springframework.security: INFO
-    org.hibernate.SQL: WARN
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss} %-5level [%logger{20}] - %msg%n"
