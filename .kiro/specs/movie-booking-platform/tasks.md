@@ -115,26 +115,26 @@ This implementation plan covers the development of a distributed microservices-b
     - Test expired token handling, invalid token format
     - Test edge cases for token refresh and blacklisting
 
-- [ ] 3. Implement Theatre Service
-  - [ ] 3.1 Set up Theatre Service project structure and dependencies
+- [x] 3. Implement Theatre Service
+  - [x] 3.1 Set up Theatre Service project structure and dependencies
     - Configure Spring Boot with Spring Data JPA, Redis for caching
     - Set up PostgreSQL connection and Flyway migrations
     - Add RestTemplate/WebClient for inter-service communication
     - _Requirements: FR-TH-01 to FR-TH-06_
 
-  - [ ] 3.2 Create database schemas for Theatre Service
+  - [x] 3.2 Create database schemas for Theatre Service
     - Create Flyway migrations for theatres, screens, shows, seats tables
     - Add indexes: idx_theatres_city, idx_theatres_partner, idx_shows_movie, idx_seats_show
     - Implement foreign key constraints and cascading deletes
     - _Requirements: FR-TH-01 to FR-TH-04_
 
-  - [ ] 3.3 Create JPA entities and repositories
+  - [x] 3.3 Create JPA entities and repositories
     - Implement Theatre, Screen, Show, Seat entities with relationships
     - Create repositories: TheatreRepository, ScreenRepository, ShowRepository, SeatRepository
     - Add custom query methods for search operations
     - _Requirements: FR-TH-01 to FR-TH-04_
 
-  - [ ] 3.4 Implement theatre registration and onboarding
+  - [x] 3.4 Implement theatre registration and onboarding
     - Create POST /api/theatres endpoint with TheatreRequest DTO
     - Implement TheatreService to create theatre with PENDING_APPROVAL status
     - Create screens and initial seat layout in same transaction
@@ -145,7 +145,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 6: Theatre creation is retrievable**
     - **Validates: Requirements FR-TH-01**
 
-  - [ ] 3.6 Implement screen management endpoints
+  - [x] 3.6 Implement screen management endpoints
     - Create POST /api/theatres/{theatreId}/screens for adding screens
     - Create PUT /api/theatres/{theatreId}/screens/{screenId} for updates
     - Create DELETE /api/theatres/{theatreId}/screens/{screenId} for deletion
@@ -156,7 +156,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 7: Screen operations maintain count invariant**
     - **Validates: Requirements FR-TH-02**
 
-  - [ ] 3.8 Implement show management endpoints
+  - [x] 3.8 Implement show management endpoints
     - Create POST /api/theatres/{theatreId}/shows for creating shows
     - Create PUT /api/theatres/shows/{showId} for updates
     - Create DELETE /api/theatres/shows/{showId} for deletion
@@ -167,7 +167,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 8: Show CRUD maintains data integrity**
     - **Validates: Requirements FR-TH-03**
 
-  - [ ] 3.10 Implement seat inventory allocation
+  - [x] 3.10 Implement seat inventory allocation
     - Create seat records for each show based on screen layout
     - Implement POST endpoint to initialize seats with AVAILABLE/BLOCKED status
     - Ensure each seat number appears exactly once per show
@@ -177,7 +177,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 9: Seat allocation creates correct inventory**
     - **Validates: Requirements FR-TH-04**
 
-  - [ ] 3.12 Implement bulk seat status update
+  - [x] 3.12 Implement bulk seat status update
     - Create PUT /api/theatres/shows/{showId}/seats endpoint
     - Accept array of seat updates with seat number and status
     - Execute updates in single transaction (atomic operation)
@@ -187,7 +187,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 10: Bulk seat update is atomic**
     - **Validates: Requirements FR-TH-05**
 
-  - [ ] 3.14 Implement theatre approval workflow
+  - [x] 3.14 Implement theatre approval workflow
     - Create PUT /api/theatres/{theatreId}/approve endpoint (SUPER_ADMIN only)
     - Transition status from PENDING_APPROVAL to APPROVED or REJECTED
     - Validate current status before allowing transition
@@ -197,7 +197,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 11: Theatre approval transitions status correctly**
     - **Validates: Requirements FR-TH-06**
 
-  - [ ] 3.16 Implement theatre and show search endpoints
+  - [x] 3.16 Implement theatre and show search endpoints
     - Create GET /api/theatres/search with filters: city, movieName, date, language, genre
     - Return theatres with matching shows and available seat counts
     - Implement caching with Redis (60-second TTL)
