@@ -1,12 +1,12 @@
 server:
-  port: 8086
+  port: 8082
 
 spring:
   application:
-    name: auth-service
+    name: theatre-service
 
   datasource:
-    url: jdbc:postgresql://${AUTH_DB_HOST:localhost}:5432/auth_db
+    url: jdbc:postgresql://${THEATRE_DB_HOST:localhost}:5432/theatre_db
     username: "moviebooking"
     password: "moviebooking123"
     driver-class-name: org.postgresql.Driver
@@ -35,19 +35,19 @@ spring:
       port: 6379
       timeout: 2000ms
 
-jwt:
-  key-store-path: ${JWT_KEY_STORE_PATH:classpath:keystore/auth-keystore.p12}
-  key-store-password: ${JWT_KEY_STORE_PASSWORD:changeit}
-  key-alias: ${JWT_KEY_ALIAS:auth-key}
-  access-token-expiry: 900000
-  refresh-token-expiry: 604800000
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+
+auth:
+  service:
+    url: ${AUTH_SERVICE_URL:http://localhost:8086}
 
 logging:
   level:
-    com.xyz.auth: DEBUG
-    org.springframework.security: DEBUG
+    com.xyz.theatre: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{HH:mm:ss} %-5level [%logger{20}] - %msg%n"

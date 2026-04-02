@@ -1,0 +1,469 @@
+{
+  "info": {
+    "name": "XYZ Movie Booking Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "authBase", "value": "http://localhost:8081" },
+    { "key": "theatreBase", "value": "http://localhost:8082" },
+    { "key": "bookingBase", "value": "http://localhost:8083" },
+    { "key": "paymentBase", "value": "http://localhost:8084" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "theatreId", "value": "" },
+    { "key": "screenId", "value": "" },
+    { "key": "showId", "value": "" },
+    { "key": "bookingId", "value": "" },
+    { "key": "holdId", "value": "" },
+    { "key": "paymentId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Register - Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@test.com\",\n  \"password\": \"password123\",\n  \"role\": \"CUSTOMER\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('userId', res.data.userId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Register - Theatre Partner",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"partner@test.com\",\n  \"password\": \"password123\",\n  \"role\": \"THEATRE_PARTNER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register - Super Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"password123\",\n  \"role\": \"SUPER_ADMIN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@test.com\",\n  \"password\": \"password123\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) {",
+                "  pm.collectionVariables.set('accessToken', res.data.accessToken);",
+                "  pm.collectionVariables.set('refreshToken', res.data.refreshToken);",
+                "  pm.collectionVariables.set('userId', res.data.userId);",
+                "}"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Login - Partner",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"partner@test.com\",\n  \"password\": \"password123\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) {",
+                "  pm.collectionVariables.set('accessToken', res.data.accessToken);",
+                "  pm.collectionVariables.set('refreshToken', res.data.refreshToken);",
+                "}"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{authBase}}/api/auth/validate"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/refresh",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('accessToken', res.data.accessToken);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{authBase}}/api/auth/logout",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accessToken\": \"{{accessToken}}\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Theatre Service",
+      "item": [
+        {
+          "name": "Create Theatre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{theatreBase}}/api/theatres",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PVR Cinemas\",\n  \"city\": \"Mumbai\",\n  \"address\": \"123 Main Street, Andheri\",\n  \"screens\": [\n    {\n      \"name\": \"Screen 1\",\n      \"totalSeats\": 100,\n      \"seatLayout\": {\"rows\": 10, \"cols\": 10}\n    }\n  ]\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('theatreId', res.data.theatreId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Get Theatre",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{theatreBase}}/api/theatres/{{theatreId}}"
+          }
+        },
+        {
+          "name": "Approve Theatre",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{theatreBase}}/api/theatres/{{theatreId}}/approve"
+          }
+        },
+        {
+          "name": "Add Screen",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{theatreBase}}/api/theatres/{{theatreId}}/screens",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Screen 2\",\n  \"totalSeats\": 80,\n  \"seatLayout\": {\"rows\": 8, \"cols\": 10}\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('screenId', res.data.screenId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Create Show",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{theatreBase}}/api/theatres/{{theatreId}}/shows",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movieName\": \"Avengers\",\n  \"screenId\": \"{{screenId}}\",\n  \"showDate\": \"2026-04-10\",\n  \"showTime\": \"14:00:00\",\n  \"basePrice\": 250.00,\n  \"language\": \"English\",\n  \"genre\": \"Action\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('showId', res.data.showId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Search Theatres",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{theatreBase}}/api/theatres/search?city=Mumbai&movieName=Avengers&date=2026-04-10",
+              "query": [
+                { "key": "city", "value": "Mumbai" },
+                { "key": "movieName", "value": "Avengers" },
+                { "key": "date", "value": "2026-04-10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Bulk Update Seats",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{theatreBase}}/api/theatres/shows/{{showId}}/seats",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"seatUpdates\": [\n    { \"seatNumber\": \"A1\", \"status\": \"AVAILABLE\" },\n    { \"seatNumber\": \"A2\", \"status\": \"AVAILABLE\" },\n    { \"seatNumber\": \"A3\", \"status\": \"BLOCKED\" }\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Booking Service",
+      "item": [
+        {
+          "name": "Get Available Seats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{bookingBase}}/api/bookings/show/{{showId}}/seats"
+          }
+        },
+        {
+          "name": "Hold Seats",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{bookingBase}}/api/bookings/hold",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"showId\": \"{{showId}}\",\n  \"seatNumbers\": [\"A1\", \"A2\"],\n  \"userId\": \"{{userId}}\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('holdId', res.data.holdId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Confirm Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{bookingBase}}/api/bookings/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"holdId\": \"{{holdId}}\",\n  \"paymentId\": \"{{paymentId}}\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('bookingId', res.data.bookingId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{bookingBase}}/api/bookings/{{bookingId}}"
+          }
+        },
+        {
+          "name": "Get User Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{bookingBase}}/api/bookings/user/{{userId}}"
+          }
+        },
+        {
+          "name": "Bulk Book",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{bookingBase}}/api/bookings/bulk",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"showId\": \"{{showId}}\",\n  \"seatNumbers\": [\"B1\", \"B2\", \"B3\"],\n  \"userId\": \"{{userId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Cancel",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{bookingBase}}/api/bookings/bulk",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingIds\": [\"{{bookingId}}\"]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Service",
+      "item": [
+        {
+          "name": "Initiate Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{paymentBase}}/api/payments/initiate",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"amount\": 500.00,\n  \"userId\": \"{{userId}}\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.data) pm.collectionVariables.set('paymentId', res.data.paymentId);"
+              ]
+            }
+          }]
+        },
+        {
+          "name": "Payment Webhook - Success",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{paymentBase}}/api/payments/webhook",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"{{paymentId}}\",\n  \"status\": \"SUCCESS\",\n  \"gatewayTransactionId\": \"TXN_123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Payment Webhook - Failure",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{paymentBase}}/api/payments/webhook",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"{{paymentId}}\",\n  \"status\": \"FAILED\",\n  \"gatewayTransactionId\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Payment",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{paymentBase}}/api/payments/{{paymentId}}"
+          }
+        },
+        {
+          "name": "Initiate Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{paymentBase}}/api/payments/refund",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"{{paymentId}}\",\n  \"amount\": 500.00\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
