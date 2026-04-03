@@ -34,6 +34,17 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: 6379
       timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 64
+          max-idle: 10
+          min-idle: 5
+          max-wait: 3000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 900000  # Default TTL: 15 minutes
 
 jwt:
   key-store-path: ${JWT_KEY_STORE_PATH:classpath:keystore/auth-keystore.p12}

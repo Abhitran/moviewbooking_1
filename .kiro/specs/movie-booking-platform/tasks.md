@@ -240,7 +240,7 @@ This implementation plan covers the development of a distributed microservices-b
     - Add methods for finding by userId, showId, and status
     - _Requirements: FR-BK-01 to FR-BK-09_
 
-  - [~] 5.4 Implement seat availability query endpoint
+  - [ ] 5.4 Implement seat availability query endpoint
     - Create GET /api/bookings/show/{showId}/seats endpoint
     - Query seat status from Theatre Service
     - Check Redis for held seats (not yet expired)
@@ -251,7 +251,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 13: Available seats query returns only bookable seats**
     - **Validates: Requirements FR-BK-02**
 
-  - [-] 5.6 Implement seat hold with distributed locking
+  - [ ] 5.6 Implement seat hold with distributed locking
     - Create POST /api/bookings/hold endpoint
     - Validate seat count <= 10 seats
     - Use Redisson distributed locks with 10-minute TTL
@@ -290,7 +290,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 23: Offer mutual exclusivity**
     - **Validates: Requirements FR-BK-08**
 
-  - [~] 5.14 Implement booking confirmation endpoint
+  - [x] 5.14 Implement booking confirmation endpoint
     - Create POST /api/bookings/confirm endpoint
     - Validate holdId exists and not expired
     - Calculate offers using OfferEngine
@@ -302,7 +302,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 17: Payment success confirms booking**
     - **Validates: Requirements FR-BK-04, FR-PAY-03**
 
-  - [~] 5.16 Implement Kafka consumer for payment events
+  - [x] 5.16 Implement Kafka consumer for payment events
     - Create @KafkaListener for payment.success topic
     - Update booking status to CONFIRMED
     - Release seat locks from Redis
@@ -313,7 +313,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 24: Booking confirmation publishes notification event**
     - **Validates: Requirements FR-BK-09**
 
-  - [~] 5.18 Implement booking cancellation endpoint
+  - [x] 5.18 Implement booking cancellation endpoint
     - Create DELETE /api/bookings/{bookingId} endpoint
     - Validate booking exists and status is CONFIRMED
     - Update booking status to CANCELLED
@@ -325,7 +325,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 18: Cancellation transitions status and initiates refund**
     - **Validates: Requirements FR-BK-05, FR-PAY-05**
 
-  - [~] 5.20 Implement bulk booking endpoint
+  - [x] 5.20 Implement bulk booking endpoint
     - Create POST /api/bookings/bulk endpoint
     - Accept multiple seat selections in single request
     - Execute all seat locks and booking creation in single transaction
@@ -336,7 +336,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 19: Bulk booking is atomic**
     - **Validates: Requirements FR-BK-06**
 
-  - [~] 5.22 Implement bulk cancellation endpoint
+  - [x] 5.22 Implement bulk cancellation endpoint
     - Create DELETE /api/bookings/bulk endpoint
     - Accept array of booking IDs
     - Cancel all bookings in single transaction
@@ -347,7 +347,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 20: Bulk cancellation is atomic**
     - **Validates: Requirements FR-BK-07**
 
-  - [~] 5.24 Implement user bookings query endpoint
+  - [x] 5.24 Implement user bookings query endpoint
     - Create GET /api/bookings/user/{userId} endpoint
     - Return all bookings with show details, seats, amounts, status
     - Add pagination support (page size: 20)
@@ -360,25 +360,25 @@ This implementation plan covers the development of a distributed microservices-b
     - Test concurrent booking attempts on same seat
 
 - [ ] 6. Implement Payment Service
-  - [ ] 6.1 Set up Payment Service project structure and dependencies
+  - [x] 6.1 Set up Payment Service project structure and dependencies
     - Configure Spring Boot with Spring Data JPA, Kafka
     - Set up PostgreSQL connection and Flyway migrations
     - Configure Kafka producer for payment events
     - _Requirements: FR-PAY-01 to FR-PAY-05_
 
-  - [ ] 6.2 Create database schemas for Payment Service
+  - [x] 6.2 Create database schemas for Payment Service
     - Create Flyway migrations for payments and refunds tables
     - Add indexes: idx_payments_booking, idx_payments_user, idx_refunds_payment
     - Implement foreign key constraints
     - _Requirements: FR-PAY-01 to FR-PAY-05_
 
-  - [ ] 6.3 Create JPA entities and repositories
+  - [x] 6.3 Create JPA entities and repositories
     - Implement Payment and Refund entities
     - Create PaymentRepository and RefundRepository
     - Add custom query methods for finding by bookingId and userId
     - _Requirements: FR-PAY-01 to FR-PAY-05_
 
-  - [ ] 6.4 Implement payment initiation endpoint
+  - [x] 6.4 Implement payment initiation endpoint
     - Create POST /api/payments/initiate endpoint
     - Create payment record with PENDING status
     - Generate stubbed gateway URL
@@ -389,7 +389,7 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 25: Payment initiation creates pending record**
     - **Validates: Requirements FR-PAY-01**
 
-  - [ ] 6.6 Implement payment gateway webhook handler
+  - [x] 6.6 Implement payment gateway webhook handler
     - Create POST /api/payments/webhook endpoint
     - Validate webhook payload (idempotency check)
     - Update payment status to SUCCESS or FAILED
@@ -400,12 +400,12 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 26: Payment webhook updates payment status**
     - **Validates: Requirements FR-PAY-02**
 
-  - [ ] 6.8 Implement payment success event publishing
+  - [x] 6.8 Implement payment success event publishing
     - Publish payment.success event to Kafka on successful payment
     - Include paymentId, bookingId, amount, gatewayTransactionId in event
     - _Requirements: FR-PAY-03_
 
-  - [ ] 6.9 Implement payment failure event publishing
+  - [x] 6.9 Implement payment failure event publishing
     - Publish payment.failed event to Kafka on failed payment
     - Include paymentId, bookingId, reason in event
     - Trigger seat lock release in Booking Service
@@ -415,14 +415,14 @@ This implementation plan covers the development of a distributed microservices-b
     - **Property 27: Payment failure releases seat locks**
     - **Validates: Requirements FR-PAY-04**
 
-  - [ ] 6.11 Implement refund initiation endpoint
+  - [x] 6.11 Implement refund initiation endpoint
     - Create POST /api/payments/refund endpoint
     - Validate payment exists and is successful
     - Create refund record with PENDING status
     - Stub refund processing (immediate success)
     - _Requirements: FR-PAY-05_
 
-  - [ ] 6.12 Implement payment query endpoint
+  - [x] 6.12 Implement payment query endpoint
     - Create GET /api/payments/{paymentId} endpoint
     - Return payment details with status and timestamps
     - _Requirements: FR-PAY-01_
@@ -433,26 +433,26 @@ This implementation plan covers the development of a distributed microservices-b
     - Test refund for non-existent payment
     - Test payment status transitions
 
-- [ ] 7. Implement Notification Service
-  - [ ] 7.1 Set up Notification Service project structure and dependencies
+- [x] 7. Implement Notification Service
+  - [x] 7.1 Set up Notification Service project structure and dependencies
     - Configure Spring Boot with Spring Kafka
     - Add email/SMS stub implementations (console logging)
     - Configure Kafka consumers for notification events
     - _Requirements: FR-BK-09_
 
-  - [ ] 7.2 Implement Kafka consumer for booking.confirmed events
+  - [x] 7.2 Implement Kafka consumer for booking.confirmed events
     - Create @KafkaListener for booking.confirmed topic
     - Extract booking details from event payload
     - Send confirmation email/SMS (stubbed - log to console)
     - _Requirements: FR-BK-09_
 
-  - [ ] 7.3 Implement Kafka consumer for booking.cancelled events
+  - [x] 7.3 Implement Kafka consumer for booking.cancelled events
     - Create @KafkaListener for booking.cancelled topic
     - Extract cancellation details from event payload
     - Send cancellation notification (stubbed - log to console)
     - _Requirements: FR-BK-09_
 
-  - [ ] 7.4 Implement Kafka consumer for payment.failed events
+  - [x] 7.4 Implement Kafka consumer for payment.failed events
     - Create @KafkaListener for payment.failed topic
     - Extract payment failure details from event payload
     - Send payment failure alert (stubbed - log to console)
@@ -463,33 +463,33 @@ This implementation plan covers the development of a distributed microservices-b
     - Test notification formatting
     - Test error handling for malformed events
 
-- [ ] 8. Implement API Gateway
-  - [ ] 8.1 Set up API Gateway project with Spring Cloud Gateway
+- [x] 8. Implement API Gateway
+  - [x] 8.1 Set up API Gateway project with Spring Cloud Gateway
     - Configure Spring Cloud Gateway dependencies
     - Set up routing configuration for all 5 backend services
     - Configure service discovery (if using Cloud Map) or direct URLs
     - _Requirements: All services_
 
-  - [ ] 8.2 Implement JWT authentication filter
+  - [x] 8.2 Implement JWT authentication filter
     - Create global filter to validate JWT tokens
     - Call Auth Service /api/auth/validate endpoint
     - Extract userId and role from token
     - Add user context to request headers for downstream services
     - _Requirements: FR-AUTH-03, NFR-Security_
 
-  - [ ] 8.3 Implement role-based routing and authorization
+  - [x] 8.3 Implement role-based routing and authorization
     - Configure route-level role requirements
     - Block requests that don't meet role requirements (403 Forbidden)
     - Allow public routes (login, register) without authentication
     - _Requirements: FR-AUTH-03_
 
-  - [ ] 8.4 Implement rate limiting
+  - [x] 8.4 Implement rate limiting
     - Configure Token Bucket rate limiter (100 req/min per user)
     - Use Redis for distributed rate limit tracking
     - Return 429 Too Many Requests when limit exceeded
     - _Requirements: NFR-Security_
 
-  - [ ] 8.5 Implement request/response logging
+  - [x] 8.5 Implement request/response logging
     - Add logging filter for all requests
     - Log correlation ID, method, path, status, duration
     - Exclude sensitive fields (passwords, tokens) from logs
@@ -502,29 +502,29 @@ This implementation plan covers the development of a distributed microservices-b
     - Test routing to correct backend services
 
 
-- [ ] 9. Implement Redis and Kafka configuration
-  - [ ] 9.1 Configure Redis connection and Redisson client
+- [x] 9. Implement Redis and Kafka configuration
+  - [x] 9.1 Configure Redis connection and Redisson client
     - Set up Redis connection properties in application.yml
     - Configure Redisson client with connection pooling
     - Set lock watchdog timeout to 30 seconds
     - Configure cache manager with TTL settings
     - _Requirements: FR-BK-03, NFR-Scalability_
 
-  - [ ] 9.2 Configure Kafka topics and producers
+  - [x] 9.2 Configure Kafka topics and producers
     - Create Kafka topic configurations: booking.confirmed, booking.cancelled, payment.success, payment.failed
     - Set partitions (6 for high-volume, 3 for low-volume topics)
     - Set replication factor to 3, min in-sync replicas to 2
     - Configure producer properties: acks=all, retries, idempotence
     - _Requirements: FR-BK-09, FR-PAY-03, FR-PAY-04_
 
-  - [ ] 9.3 Configure Kafka consumers with error handling
+  - [x] 9.3 Configure Kafka consumers with error handling
     - Set up consumer groups for each service
     - Configure consumer properties: auto-offset-reset, max-poll-records
     - Implement error handlers with retry logic (max 3 attempts)
     - Add dead letter queue for failed messages
     - _Requirements: FR-BK-09, FR-PAY-03, FR-PAY-04_
 
-  - [ ] 9.4 Implement cache strategies
+  - [x] 9.4 Implement cache strategies
     - Configure cache-aside pattern for show availability (60s TTL)
     - Configure local cache (Caffeine) for theatre metadata (10s TTL)
     - Implement cache invalidation on booking confirmation

@@ -1,0 +1,84 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Auth Service Routes
+        - id: auth-service
+          uri: http://${AUTH_SERVICE_HOST:localhost}:8081
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - name: RequestLogging
+            - name: CorrelationId
+
+        # Theatre Service Routes
+        - id: theatre-service
+          uri: http://${THEATRE_SERVICE_HOST:localhost}:8082
+          predicates:
+            - Path=/api/theatres/**
+          filters:
+            - name: JwtAuthentication
+            - name: RequestLogging
+            - name: CorrelationId
+
+        # Booking Service Routes
+        - id: booking-service
+          uri: http://${BOOKING_SERVICE_HOST:localhost}:8083
+          predicates:
+            - Path=/api/bookings/**
+          filters:
+            - name: JwtAuthentication
+            - name: RequestLogging
+            - name: CorrelationId
+
+        # Payment Service Routes
+        - id: payment-service
+          uri: http://${PAYMENT_SERVICE_HOST:localhost}:8084
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - name: JwtAuthentication
+            - name: RequestLogging
+            - name: CorrelationId
+
+      default-filters:
+        - name: RateLimiter
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+      timeout: 2000ms
+
+auth:
+  service:
+    url: http://${AUTH_SERVICE_HOST:localhost}:8081
+  public-paths:
+    - /api/auth/register
+    - /api/auth/login
+
+rate-limiter:
+  requests-per-minute: 100
+  redis-key-prefix: rate-limit
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.xyz.gateway: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss} [%X{correlationId}] %-5level [%logger{20}] - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

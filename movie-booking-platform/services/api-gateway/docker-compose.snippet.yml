@@ -1,0 +1,30 @@
+# API Gateway Docker Compose Configuration
+# Add this to the main docker-compose.yml file
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTH_SERVICE_HOST=auth-service
+      - THEATRE_SERVICE_HOST=theatre-service
+      - BOOKING_SERVICE_HOST=booking-service
+      - PAYMENT_SERVICE_HOST=payment-service
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+      - auth-service
+      - theatre-service
+      - booking-service
+      - payment-service
+    networks:
+      - movie-booking-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
