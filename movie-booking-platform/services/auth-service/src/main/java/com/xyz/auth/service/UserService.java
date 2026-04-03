@@ -22,7 +22,7 @@ public class UserService {
 
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
-        log.debug("Registering user with email: {}", request.getEmail());
+        log.debug("Registering user with email : {}", request.getEmail());
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw AuthServiceException.emailAlreadyExists(request.getEmail());
